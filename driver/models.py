@@ -3,7 +3,11 @@ from django.db import models
 # Create your models here.
 class Bus(models.Model):
     id = models.IntegerField(null=False, primary_key=True)
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=500)
+    vehicle_number = models.CharField(max_length=50)
+    capacity = models.IntegerField()
+    is_active = models.BooleanField()
 
     def __str__(self):
         return self.name
