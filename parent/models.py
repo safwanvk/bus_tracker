@@ -1,5 +1,6 @@
 from django.db import models
 
+
 from driver.models import Bus
 
 # Create your models here.
@@ -19,8 +20,8 @@ class Parent(models.Model):
 
 class Kid(models.Model):
     id = models.IntegerField(null=False, primary_key=True)
-    name = models.CharField(max_length=64)
-    section = models.CharField(max_length=64)
+    name = models.CharField(unique=True, max_length=60)
+    section = models.TextField(max_length=60)
     photo = models.FileField()
     parent_id = models.ForeignKey(Parent,to_field='id',on_delete=models.CASCADE, null=False)
     bus_id = models.ForeignKey(Bus,to_field='id',on_delete=models.CASCADE, null=False)
