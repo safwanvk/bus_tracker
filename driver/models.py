@@ -1,5 +1,7 @@
 from django.db import models
 
+from core.models import *
+
 # Create your models here.
 class Bus(models.Model):
     id = models.IntegerField(null=False, primary_key=True)
@@ -13,7 +15,7 @@ class Bus(models.Model):
         db_table = "Bus"
 
 class Driver(models.Model):
-    id = models.IntegerField(null=False, primary_key=True)
+    user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=64)
     contact = models.IntegerField()
     password = models.CharField(max_length=128)
