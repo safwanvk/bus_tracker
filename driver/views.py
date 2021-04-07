@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser 
 
 from .models import *
+from .serializer import *
 
 from django.contrib.auth.hashers import *
 
@@ -34,7 +35,18 @@ def create_driver(request, *args, **kwargs):
                     bus_id=Bus.objects.get(id=bus_id),
             )
 
-        return Response({"message": "Driver Created Successfully"} ,status=200)
+        un_allocated = Bus.objects.raw("""SELECT id,bus_id FROM 
+               Bus where id not in (select b.id from bus as b inner join driver d on d.bus_id=b.id)""")
+
+        un_allocated_serializer = BusSerializer(un_allocated, many=True)
+
+        alloc_driver = Bus.objects.row("""select b.id,d.userid,d.name,d.contact from bus as b inner join driver
+         d on d.bus_id=b.id""")
+
+        alloc_driver_serializer = BusSerializer(alloc_driver, many=True)
+
+        return Response({"message": "Driver Created Successfully",
+        "bus_data": un_allocated_serializer.data,"driver_list":alloc_driver_serializer.data} ,status=200)
         
     except Exception as e:
         print(e)
