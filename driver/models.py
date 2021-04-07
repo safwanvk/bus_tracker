@@ -17,7 +17,7 @@ class Bus(models.Model):
 class Driver(models.Model):
     user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=64)
-    contact = models.IntegerField()
+    contact = models.CharField(max_length=15)
     password = models.CharField(max_length=128)
     bus_id = models.ForeignKey(Bus,to_field='id',on_delete=models.CASCADE, null=False)
 

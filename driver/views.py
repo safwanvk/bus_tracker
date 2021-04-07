@@ -4,6 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser 
 
+from .models import *
+
+from django.contrib.auth.hashers import *
+
 # Create your views here.
 @api_view(['POST'])
 def create_driver(request, *args, **kwargs):
@@ -22,10 +26,16 @@ def create_driver(request, *args, **kwargs):
 
     try:
 
-        # reg = Attendance.objects.create(
-        #             sid=Student.objects.get(sid=std_id), 
-        #             arrival=arrival,
-        #             event_id=Event.objects.get(event_id=event_uid),
-        #     )
+        driver = Driver.objects.create(
+                    user_id=User.objects.get(id=user_id), 
+                    name=name,
+                    contact=contact,
+                    password=make_password(password),
+                    bus_id=Bus.objects.get(id=bus_id),
+            )
 
-        return Response({"message": "Successfully signed in"} ,status=200)
+        return Response({"message": "Driver Created Successfully"} ,status=200)
+        
+    except Exception as e:
+        print(e)
+        return Response({"message": "A server error occurred"}, status=500)
