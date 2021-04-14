@@ -35,13 +35,13 @@ def create_driver(request, *args, **kwargs):
                     bus_id=Bus.objects.get(id=bus_id),
             )
 
-        un_allocated = Bus.objects.raw("""SELECT id,bus_id FROM 
-               Bus where id not in (select b.id from bus as b inner join driver d on d.bus_id=b.id)""")
+        un_allocated = Bus.objects.raw("""SELECT id,bus_no FROM 
+               Bus where id not in (select b.id from Bus as b left join Driver d on d.bus_id_id=b.id)""")
 
         un_allocated_serializer = BusSerializer(un_allocated, many=True)
 
-        alloc_driver = Bus.objects.row("""select b.id,d.userid,d.name,d.contact from bus as b inner join driver
-         d on d.bus_id=b.id""")
+        alloc_driver = Bus.objects.raw("""select b.id,d.user_id_id,d.name,d.contact from Bus as b left join Driver
+         d on d.bus_id_id=b.id""")
 
         alloc_driver_serializer = BusSerializer(alloc_driver, many=True)
 
