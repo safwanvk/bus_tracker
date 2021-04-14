@@ -16,6 +16,7 @@ class Bus(models.Model):
         db_table = "Bus"
 
 class Driver(models.Model):
+    id = models.IntegerField(null=False, primary_key=True)
     user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=64)
     contact = models.CharField(max_length=15)

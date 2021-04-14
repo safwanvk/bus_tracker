@@ -8,6 +8,7 @@ from .models import *
 from .serializer import *
 
 from django.contrib.auth.hashers import *
+from rest_framework import status
 
 # Create your views here.
 @api_view(['POST'])
@@ -48,6 +49,24 @@ def create_driver(request, *args, **kwargs):
         return Response({"message": "Driver Created Successfully",
         "bus_data": un_allocated_serializer.data,"driver_list":alloc_driver_serializer.data} ,status=200)
         
+    except Exception as e:
+        print(e)
+        return Response({"message": "A server error occurred"}, status=500)
+
+# delete driver
+@api_view(['DELETE'])
+def delete_driver(request, pk):
+
+    try:
+
+        try: 
+            driver = Driver.objects.get(id=pk) 
+        except Driver.DoesNotExist: 
+            return Response({'message': 'The Driver does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+
+        driver.delete() 
+        return Response({'message': 'Driver was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+    
     except Exception as e:
         print(e)
         return Response({"message": "A server error occurred"}, status=500)
