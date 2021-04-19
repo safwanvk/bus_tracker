@@ -26,7 +26,7 @@ def create_driver(request, *args, **kwargs):
     password = data.get('password')
 
     if not (user_id and bus_id and name and contact and password):
-        return Response({"message": "Parameters missing"}, status=400)
+        return Response({"message": "Parameters missing"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
 
