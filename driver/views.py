@@ -10,7 +10,7 @@ from .serializer import *
 from django.contrib.auth.hashers import *
 from rest_framework import status
 
-from ..utils import *
+from bus_tracker.utils import *
 
 # Create your views here.
 @api_view(['POST'])

@@ -7,7 +7,7 @@ from rest_framework.parsers import JSONParser
 from .models import *
 from .serializer import *
 
-from ..utils import *
+from bus_tracker.utils import *
 
 
 from django.contrib.auth.hashers import *
