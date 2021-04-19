@@ -62,7 +62,7 @@ def get_driver(request):
          many=True
         )
 
-        return Response({"message": "Successfully",
+        return Response({"message": "Success",
         "bus_data": un_allocated,"driver_list":alloc_driver} ,status=status.HTTP_200_OK)
     
     except Exception as e:
