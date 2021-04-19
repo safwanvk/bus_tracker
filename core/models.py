@@ -28,3 +28,12 @@ class User(models.Model):
 
     class Meta:
         db_table = "User"
+
+class Feedback(models.Model):
+   id = models.AutoField(null=False, primary_key=True)
+   name = models.CharField(max_length=50)
+   email = models.CharField(max_length=50)
+   title = models.CharField(max_length=200)
+   message = models.CharField(max_length=500)
+   date = models.DateTimeField()
+   user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE,null=False)

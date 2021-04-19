@@ -41,6 +41,8 @@ def create_kid(request, *args, **kwargs):
             parent_id=Parent.objects.get(id=p_id),
             bus_id=Bus.objects.get(id=bus)
         )
+
+        # TODO: Send this generated password to Parent email
         return Response({"message": "Kid Created Successfully"} ,status=status.HTTP_200_OK)
 
     except Exception as e:
@@ -58,11 +60,19 @@ def get_parent(request):
             select k.id as kid_id,p.id,k.name as kid_name,p.name as parent_name,
             p.contact,p.email,b.id as bus_id,b.bus_no from Parent as p left join Kid k on p.id=k.parent_id_id left join 
             Bus b on k.bus_id_id=b.id
+            ''',
+            many=True
+        )
+
+        all_bus = execute(
             '''
+            select * from bus
+            ''',
+            many=True
         )
 
         return Response({"message": "Success",
-        "parent_data": all_parent_kid} ,status=status.HTTP_200_OK)
+        "parent_data": all_parent_kid, "all_bus": all_bus} ,status=status.HTTP_200_OK)
     
     except Exception as e:
         print(e)
