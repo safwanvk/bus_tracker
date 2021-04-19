@@ -12,7 +12,7 @@ class UserType(models.Model):
         db_table = "User_Type"
 
 class User(models.Model):
-    id = models.IntegerField(null=False, primary_key=True)
+    id = models.AutoField(null=False, primary_key=True)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     phone = models.CharField(max_length=15)

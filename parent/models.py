@@ -5,7 +5,7 @@ from driver.models import Bus
 
 # Create your models here.
 class Parent(models.Model):
-    id = models.IntegerField(null=False, primary_key=True)
+    id = models.AutoField(null=False, primary_key=True)
     name = models.CharField(max_length=64)
     contact = models.IntegerField()
     password = models.CharField(max_length=128)
@@ -19,7 +19,7 @@ class Parent(models.Model):
         db_table = "Parent"
 
 class Kid(models.Model):
-    id = models.IntegerField(null=False, primary_key=True)
+    id = models.AutoField(null=False, primary_key=True)
     name = models.CharField(unique=True, max_length=60)
     section = models.TextField(max_length=60)
     photo = models.FileField()

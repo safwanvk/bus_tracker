@@ -10,6 +10,8 @@ from .serializer import *
 from django.contrib.auth.hashers import *
 from rest_framework import status
 
+from ..utils import *
+
 # Create your views here.
 @api_view(['POST'])
 def create_driver(request, *args, **kwargs):
@@ -36,32 +38,45 @@ def create_driver(request, *args, **kwargs):
                     bus_id=Bus.objects.get(id=bus_id),
             )
 
-        un_allocated = Bus.objects.raw("""SELECT id,bus_no FROM 
-               Bus where id not in (select b.id from Bus as b left join Driver d on d.bus_id_id=b.id)""")
-
-        un_allocated_serializer = BusSerializer(un_allocated, many=True)
-
-        alloc_driver = Bus.objects.raw("""select b.id,d.user_id_id,d.name,d.contact from Bus as b left join Driver
-         d on d.bus_id_id=b.id""")
-
-        alloc_driver_serializer = BusSerializer(alloc_driver, many=True)
-
-        return Response({"message": "Driver Created Successfully",
-        "bus_data": un_allocated_serializer.data,"driver_list":alloc_driver_serializer.data} ,status=200)
+        return Response({"message": "Driver Created Successfully"} ,status=status.HTTP_201_CREATED)
         
     except Exception as e:
         print(e)
-        return Response({"message": "A server error occurred"}, status=500)
+        return Response({"message": "A server error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def get_driver(request):
+
+    try:
+
+        un_allocated = execute(
+            '''SELECT id,bus_no FROM 
+               Bus where id not in (select b.id from Bus as b left join Driver d on d.bus_id_id=b.id)''',
+               many=True
+        )
+
+
+        alloc_driver = execute(
+            '''select b.id,d.name,d.contact,b.bus_no from Driver as d left join Bus
+         b on d.bus_id_id=b.id''',
+         many=True
+        )
+
+        return Response({"message": "Successfully",
+        "bus_data": un_allocated,"driver_list":alloc_driver} ,status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        print(e)
+        return Response({"message": "A server error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # delete driver
 @api_view(['DELETE'])
 def delete_driver(request, pk):
-
     try:
-
-        try: 
-            driver = Driver.objects.get(id=pk) 
-        except Driver.DoesNotExist: 
+        try:
+            driver = Driver.objects.get(id=pk)
+        except Driver.DoesNotExist:
             return Response({'message': 'The Driver does not exist'}, status=status.HTTP_404_NOT_FOUND) 
 
         driver.delete() 
@@ -69,4 +84,5 @@ def delete_driver(request, pk):
     
     except Exception as e:
         print(e)
-        return Response({"message": "A server error occurred"}, status=500)
+        return Response({"message": "A server error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
