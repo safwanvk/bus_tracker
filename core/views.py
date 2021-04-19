@@ -20,7 +20,7 @@ def get_feedback(request):
 
         feed_backs = execute(
             '''
-            select * from feedback
+            select * from Feedback
             ''',
             many=True
         )

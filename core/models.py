@@ -37,3 +37,9 @@ class Feedback(models.Model):
    message = models.CharField(max_length=500)
    date = models.DateTimeField()
    user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE,null=False)
+   
+   def __str__(self):
+       return self.title
+
+   class Meta:
+        db_table = "Feedback"
