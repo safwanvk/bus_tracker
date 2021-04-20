@@ -29,3 +29,13 @@ class Driver(models.Model):
 
     class Meta:
         db_table = "Driver"
+
+class Journey(models.Model):
+    id = models.AutoField(null=False, primary_key=True)
+    j_type = models.BooleanField(default=1)
+    date = models.TextField()
+    start = models.TextField(default=0)
+    end = models.TextField(default=0)
+    gps = models.TextField()
+    bus_id = models.ForeignKey(Bus,to_field='id',on_delete=models.CASCADE, null=False)
+    last_update = models.TextField()

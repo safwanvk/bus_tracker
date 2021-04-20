@@ -86,3 +86,36 @@ def delete_driver(request, pk):
         print(e)
         return Response({"message": "A server error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+@api_view(['POST'])
+def add_gps(request, *args, **kwargs):
+
+    data = JSONParser().parse(request)
+    print(data)
+
+    token = data.get('token')
+    lat = data.get('lat')
+    lon = data.get('lon')
+
+    if not (token and lat and lon):
+        return Response({"message": "Parameters missing"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # try:
+
+    #     driver = Driver.objects.create(
+    #                 user_id=User.objects.get(id=user_id), 
+    #                 name=name,
+    #                 contact=contact,
+    #                 password=make_password(password),
+    #                 bus_id=Bus.objects.get(id=bus_id),
+    #         )
+
+    #     return Response({"message": "Driver Created Successfully"} ,status=status.HTTP_201_CREATED)
+        
+    # except Exception as e:
+    #     print(e)
+    #     return Response({"message": "A server error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
