@@ -15,21 +15,6 @@ class Bus(models.Model):
     class Meta:
         db_table = "Bus"
 
-class Driver(models.Model):
-    id = models.AutoField(null=False, primary_key=True)
-    user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE, null=False)
-    name = models.CharField(max_length=64)
-    contact = models.CharField(max_length=15)
-    password = models.CharField(max_length=128)
-    bus_id = models.ForeignKey(Bus,to_field='id',on_delete=models.CASCADE, null=False)
-    objects = models.Manager()
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        db_table = "Driver"
-
 class Journey(models.Model):
     id = models.AutoField(null=False, primary_key=True)
     j_type = models.BooleanField(default=1)
@@ -39,3 +24,27 @@ class Journey(models.Model):
     gps = models.TextField()
     bus_id = models.ForeignKey(Bus,to_field='id',on_delete=models.CASCADE, null=False)
     last_update = models.TextField()
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        db_table = "Journey"
+
+class Driver(models.Model):
+    id = models.AutoField(null=False, primary_key=True)
+    user_id = models.ForeignKey(User,to_field='id',on_delete=models.CASCADE, null=False)
+    name = models.CharField(max_length=64)
+    contact = models.CharField(max_length=15)
+    password = models.CharField(max_length=128)
+    bus_id = models.ForeignKey(Bus,to_field='id',on_delete=models.CASCADE, null=False)
+    token = models.TextField()
+    expires = models.TextField()
+    active_ride_j_id = models.ForeignKey(Journey,to_field='id',on_delete=models.CASCADE, null=False)
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "Driver"
