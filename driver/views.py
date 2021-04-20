@@ -101,6 +101,20 @@ def add_gps(request, *args, **kwargs):
     if not (token and lat and lon):
         return Response({"message": "Parameters missing"}, status=status.HTTP_400_BAD_REQUEST)
 
+    j_id = execute(
+        '''
+        select active_ride_j_id from driver where tokan=?
+        ''',
+        [token],
+        many=True
+    )
+
+    if j_id is None or j_id is '':
+        return Response({"message": "unauthorized user or inactive session"}, status=status.HTTP_400_BAD_REQUEST)
+
+    else:
+        
+
     # try:
 
     #     driver = Driver.objects.create(
