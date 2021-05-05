@@ -109,10 +109,10 @@ def add_gps(request, *args, **kwargs):
         many=True
     )
 
-    if j_id is None or j_id is '':
+    if j_id == None or j_id == '':
         return Response({"message": "unauthorized user or inactive session"}, status=status.HTTP_400_BAD_REQUEST)
 
-    else:
+    # else:
         
 
     # try:

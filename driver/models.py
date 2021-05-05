@@ -48,3 +48,17 @@ class Driver(models.Model):
 
     class Meta:
         db_table = "Driver"
+
+
+
+class Location(models.Model):
+    id = models.AutoField(null=False, primary_key=True)
+    gps = models.TextField()
+    time = models.TextField()
+    j_id = models.ForeignKey(Journey,to_field='id',on_delete=models.CASCADE, null=False)
+
+    def __str__(self):
+        return self.gps
+
+    class Meta:
+        db_table = "Location"
