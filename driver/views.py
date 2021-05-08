@@ -12,6 +12,9 @@ from rest_framework import status
 
 from bus_tracker.utils import *
 
+import datetime
+from pytz import timezone
+
 # Create your views here.
 @api_view(['POST'])
 def create_driver(request, *args, **kwargs):
@@ -98,6 +101,7 @@ def add_gps(request, *args, **kwargs):
     lat = data.get('lat')
     lon = data.get('lon')
 
+    status = 0
     if not (token and lat and lon):
         return Response({"message": "Parameters missing"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,24 +116,57 @@ def add_gps(request, *args, **kwargs):
     if j_id == None or j_id == '':
         return Response({"message": "unauthorized user or inactive session"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # else:
+    else:
+        # add location to location table
+        # check if 1 minute passed since last update
+        prev_time = datetime.datetime.now(timezone('Asia/Kolkata')) - datetime.timedelta(minutes=1)
+        prev_time = str(prev_time)[:19]
+
+        res = execute(
+            '''SELECT  max(id) FROM 
+               Location where j_id=%s''',j_id,
+               many=False
+        )
+        if res[0] is None:
+            # since first record
+            status = 1
+        else:
+            res1 = execute(
+            '''SELECT  id FROM 
+               Location where id=%s and time(time) < time(%s)''',res[0],prev_time,
+               many=False
+        )
+        if res is None:
+            status = 0
+        else:
+            status = 1
         
+        if status == 1:
+            try:
+                lat = float(lat)
+                lon = float(lon)
+                gps = lat,lon
+                location = Location.objects.create(
+                    gps=gps, 
+                    j_id=j_id,
+                )
+                return Response({"message": "Adding Location"} ,status=status.HTTP_201_CREATED)
 
-    # try:
+    
+            except:
+                print('incorrect gps input')
+                return '0,0'
+        # update gps table
+        execute(
+        '''
+        update Journey set gps=?,last_update=? where id=?
+        ''',
+        [gps,get_date_full(),j_id],
+        )
+        return Response({"message": "Gps data added"} ,status=status.HTTP_200_OK)
 
-    #     driver = Driver.objects.create(
-    #                 user_id=User.objects.get(id=user_id), 
-    #                 name=name,
-    #                 contact=contact,
-    #                 password=make_password(password),
-    #                 bus_id=Bus.objects.get(id=bus_id),
-    #         )
 
-    #     return Response({"message": "Driver Created Successfully"} ,status=status.HTTP_201_CREATED)
-        
-    # except Exception as e:
-    #     print(e)
-    #     return Response({"message": "A server error occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 
